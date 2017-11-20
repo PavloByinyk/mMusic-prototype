@@ -46,7 +46,7 @@ public class MusicActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
     private DatabaseReference audioCloudEndPoint;
     private FirebaseStorage storage;
-    private FirebaseStorage storageMedia;
+    //private FirebaseStorage storageMedia;
 
     StorageReference storageRef;
 
@@ -66,6 +66,8 @@ public class MusicActivity extends AppCompatActivity
     private MusicAdapter musicAdapter;
     private RecyclerView recyclerView;
 
+    private final List<Track> trackList = new ArrayList<>();
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -75,9 +77,13 @@ public class MusicActivity extends AppCompatActivity
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        storage = FirebaseStorage.getInstance();
+        //storage = FirebaseStorage.getInstance();
         audioCloudEndPoint = mDatabase.child("audio");
+
+
         storage = FirebaseStorage.getInstance();
+
+
 
 
         mediaPlayer = new MediaPlayer();
@@ -135,7 +141,7 @@ public class MusicActivity extends AppCompatActivity
         progressDialog.setMessage("Buffering...");
         progressDialog.show();
 
-        Uri myUri = Uri.parse(track.getPathDataBase());
+        Uri myUri = Uri.parse(track.getPathStorage());
 
         try {
             mediaPlayer.setDataSource(getApplicationContext(), myUri);
@@ -187,10 +193,7 @@ public class MusicActivity extends AppCompatActivity
 
                     if(currentPos < bufferingLenght){
                         mediaPlayer.seekTo((currentPos * mediaFileLenght)/ seekBar.getMax());
-
                         realTimeLenght = mediaFileLenght - mediaPlayer.getCurrentPosition();
-
-
                         tvTimer.setText(getTime(realTimeLenght));
                     }
                 }
@@ -232,20 +235,17 @@ public class MusicActivity extends AppCompatActivity
 
     public void loadAudioFirebase(){
 
-        final List<Track> mJournalEntries = new ArrayList<>();
+        //final List<Track> mJournalEntries = new ArrayList<>();
         audioCloudEndPoint.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot noteSnapshot: dataSnapshot.getChildren()){
                     final Track note = noteSnapshot.getValue(Track.class);
 
-                    mJournalEntries.add(note);
+                    trackList.add(note);
 
                 }
-                loadFromStorage(mJournalEntries);
-                //musicAdapter.setList(mJournalEntries);
-
-
+                loadFromStorage();
             }
 
             @Override
@@ -256,39 +256,30 @@ public class MusicActivity extends AppCompatActivity
     }
 
 
-    public void loadFromStorage(List<Track> list){
-
-        final List<Track> mJournalEntries = new ArrayList<>();
-
-        for (final Track track : list){
+    public void loadFromStorage() {
 
 
-            Uri path = storage.getReferenceFromUrl("gs://meditation-prototype.appspot.com").child(track.getPathDataBase()).getDownloadUrl().getResult();
-            track.setPathStorage(path.toString());
-            mJournalEntries.add(track);
+        for (final Track track : trackList) {
 
+            storageRef = storage.getReference();
 
-//            storageRef = storage.getReferenceFromUrl("gs://meditation-prototype.appspot.com").child(track.getPathDataBase());
-//            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                @Override
-//                public void onSuccess(Uri uri) {
-//                    Log.e("Tuts+", "uri: " + uri.toString());
-//
-//                    track.setPathStorage(uri.toString());
-//                    mJournalEntries.add(track);
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Log.e("Tuts+", "uri: " + e.getMessage());
-//                }
-//            });
+            storageRef.child(track.getPathDataBase()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.e("Tuts+", "uri: " + uri.toString());
+                    track.setPathStorage(uri.toString());
+                    musicAdapter.addTrackToList(track);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.e("Tuts+", "uri: " + exception.getMessage());
+                }
+            });
 
 
         }
-
-        musicAdapter.setList(mJournalEntries);
-
     }
 
 }

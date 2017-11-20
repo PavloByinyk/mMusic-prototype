@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.android.mmusic.pojo.Track;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicHolder> {
 
 
-    private List<Track> tracksList;
+    private List<Track> tracksList = new ArrayList<>();
     private OnMusicAdapterListener listener;
     private Context context;
 
@@ -68,6 +69,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicHolder>
         notifyDataSetChanged();
     }
 
+    public void addTrackToList(Track track){
+        this.tracksList.add(track);
+        notifyDataSetChanged();
+    }
+
     public class MusicHolder extends RecyclerView.ViewHolder{
 
         private TextView title;
@@ -94,7 +100,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicHolder>
             count.setText(String.valueOf(getAdapterPosition()+1));
 
             seekBar.setVisibility(View.GONE);
-            playPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+            playPause.setImageResource(R.drawable.ic_action_play);
 
             playPause.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -116,7 +122,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicHolder>
                         track.setChecked(true);
                         lastTrack.setChecked(false);
                         notifyItemChanged(tracksList.indexOf(lastTrack));
-                        playPause.setImageResource(R.drawable.ic_pause_black_24dp);
+                        playPause.setImageResource(R.drawable.ic_action_pause);
                         listener.onMusicClick(track);
                         lastTrack = track;
                     }
@@ -128,9 +134,9 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicHolder>
 
     public int setImage(boolean set){
         if(set){
-            return  R.drawable.ic_pause_black_24dp;
+            return  R.drawable.ic_action_pause;
         }else {
-            return R.drawable.ic_play_arrow_black_24dp;
+            return R.drawable.ic_action_play;
         }
     }
 }
