@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "867085728944",
+    "firebase_url": "https://meditation-prototype.firebaseio.com",
+    "project_id": "meditation-prototype",
+    "storage_bucket": "meditation-prototype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867085728944:android:b8c1df2b3f66aa8f",
+        "android_client_info": {
+          "package_name": "com.example.android.mmusic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "867085728944-6pvbpdnkb2sdppmmm8qedmucicj313b4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4ZEPmND0k2_SiTdl4gAsc08kNY3Qgr-k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
