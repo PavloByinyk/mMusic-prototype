@@ -46,9 +46,7 @@ public class MusicActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
     private DatabaseReference audioCloudEndPoint;
     private FirebaseStorage storage;
-    //private FirebaseStorage storageMedia;
-
-    StorageReference storageRef;
+    private StorageReference storageRef;
 
 
 
@@ -77,13 +75,9 @@ public class MusicActivity extends AppCompatActivity
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        //storage = FirebaseStorage.getInstance();
         audioCloudEndPoint = mDatabase.child("audio");
 
-
         storage = FirebaseStorage.getInstance();
-
-
 
 
         mediaPlayer = new MediaPlayer();
@@ -105,6 +99,10 @@ public class MusicActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         loadAudioFirebase();
     }
 
@@ -133,10 +131,8 @@ public class MusicActivity extends AppCompatActivity
     @Override
     public void onMusicClick(Track track) {
 
-        if(mediaPlayer.isPlaying()){
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
+        mediaPlayer.stop();
+        mediaPlayer.reset();
 
         progressDialog.setMessage("Buffering...");
         progressDialog.show();
@@ -258,7 +254,6 @@ public class MusicActivity extends AppCompatActivity
 
     public void loadFromStorage() {
 
-
         for (final Track track : trackList) {
 
             storageRef = storage.getReference();
@@ -269,6 +264,10 @@ public class MusicActivity extends AppCompatActivity
                     Log.e("Tuts+", "uri: " + uri.toString());
                     track.setPathStorage(uri.toString());
                     musicAdapter.addTrackToList(track);
+
+                    if(progressDialog.isShowing()){
+                        progressDialog.hide();
+                    }
 
                 }
             }).addOnFailureListener(new OnFailureListener() {

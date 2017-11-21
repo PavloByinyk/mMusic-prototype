@@ -115,17 +115,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicHolder>
 
                     listener.passSeecBarAndTimerView(seekBar, duration);
 
+                    seekBar.setVisibility(View.VISIBLE);
                     track.setChecked(true);
+                    lastTrack.setChecked(false);
+                    notifyItemChanged(tracksList.indexOf(lastTrack));
+                    playPause.setImageResource(R.drawable.ic_action_pause);
+                    listener.onMusicClick(track);
+                    lastTrack = track;
 
-                    if(track.isChecked()) {
-                        seekBar.setVisibility(View.VISIBLE);
-                        track.setChecked(true);
-                        lastTrack.setChecked(false);
-                        notifyItemChanged(tracksList.indexOf(lastTrack));
-                        playPause.setImageResource(R.drawable.ic_action_pause);
-                        listener.onMusicClick(track);
-                        lastTrack = track;
-                    }
                 }
             });
         }
