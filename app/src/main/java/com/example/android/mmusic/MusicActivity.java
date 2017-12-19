@@ -73,13 +73,10 @@ public class MusicActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         audioCloudEndPoint = mDatabase.child("audio");
 
         storage = FirebaseStorage.getInstance();
-
-
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnBufferingUpdateListener(this);
